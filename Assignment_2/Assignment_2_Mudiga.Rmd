@@ -1,0 +1,184 @@
+---
+title: "Assignment 2"
+author: "Meghana Udiga"
+date: "04/09/2023"
+output:
+  word_document: default
+---
+Question 1: What is the key idea behind bagging? Can bagging deal both with high variance (overfitting) and high bias (under fitting)?
+
+```{r}
+#Bagging, often referred to as bootstrap aggregating, is the process of training many instances of the same model on different subsets of the training data, then pooling their predictions to boost a model's stability and accuracy.
+#Many bootstrap samples—subsets of the training data chosen at random with replacement—are produced from the training data as part of the bagging phase. Each bootstrap sample is then used to train a distinct instance of the model. The forecasts from all the models are then combined to provide the final prediction, which is frequently determined by taking the mean or majority vote.
+#Yes, bagging can help to deal with both high variance (overfitting) and high bias (underfitting) in a model.
+
+#By creating several copies of the same model that has been trained using different subsets of the training data, bagging reduces the variance of the predictions. Hence, overfitting is avoided. Overfitting, which occurs when a model is exceedingly complex and fits the training data too closely, might cause it to perform poorly when used with new, untrained data. By combining the predictions of several models trained on distinct subsets of the data, bagging reduces the risk of overfitting and produces predictions that are more accurate and dependable.
+#Because each model is trained on a slightly different subset of the data, bagging can also help to reduce the bias of the predictions. Underfitting, which occurs when a model is oversimplified and fails to understand the underlying patterns in the data, can cause it to perform poorly on both the training and test sets of data. The models can explore more of the feature space and identify more underlying patterns via bagging, which can help to reduce underfitting. It accomplishes this by training a large number of models on distinct data subsets.
+#Overall, bagging is a useful technique that can help to reduce a model's strong bias and high volatility, enhancing performance on new, untested data.
+
+```
+Question 2: Why bagging models are computationally more efficient when compared to boosting models with the same number of weak learners?
+```{r}
+
+#A bagging model frequently has a greater computational efficiency than a boosting model with the same number of weak learners due to differences in the training processes between the two types of models.
+#Using different subsets of the training data and replacement, bagging is the process of training several instances of the same model individually. The ability to train every instance simultaneously can greatly speed up the training process. Due to their independence, the instances may also be taught using a variety of computational tools, which might further boost the process' efficiency.
+
+#Each student is given instructions to remedy the errors produced by the learners who came before them while weak learners are gradually schooled in boosting. This sequential training strategy may take longer than bagging since weak learners depend on others who came before them. Boosting can be more computationally expensive even if each weak learner is frequently more complex than the individual examples used in bagging.
+#Bagging models are computationally more efficient when compared to boosting models with the same number of weak learners since they train the instances independently and concurrently, as opposed to boosting models' sequential training procedure and potentially more complex learners.
+
+```
+Question 3: James is thinking of creating an ensemble mode to predict whether a given stock will go up or down in the next week. He has trained several decision tree models but each model is not performing any better than a random model. The models are also very similar to each other. Do you think creating an ensemble model by combining these tree models can boost the performance?
+```{r}
+#Several weak learners are integrated using ensemble procedures like bagging and boosting to create a more robust, accurate model. The idea behind ensemble approaches is that by integrating a number of imperfect models with various flaws, the faults will balance out and provide a more accurate model that is less prone to overfitting.
+
+#Nevertheless, if the separate models are very close to one another and are not outperforming a random model, integrating them is unlikely to produce an observable improvement in performance. It is possible that the ensemble model will perform poorly because of its higher level of complexity and propensity for overfitting.
+
+#There might be a variety of causes for the various decision tree models' subpar performance. For instance, the models could be very intricate and overfit to the training set of data. Decision trees have a tendency to overfit, especially when they are deep or the training set includes a large number of attributes. If so, utilizing ensemble approaches to integrate the models could not be advantageous and might perhaps make overfitting worse.
+
+#Another issue is that important correlations or qualities from the data are absent from the models. Decision trees have a tendency to be biased and can miss subtle or complex patterns in the data. If this is the case, merging the models might not be able to address the underlying issues or significantly improve performance.
+
+#When contemplating ensemble techniques, it is essential to make sure that the separate models are diverse and generate unique errors. This is done so that ensemble approaches, which aim to reduce forecast variance, may aggregate the results of numerous separate and distinct models. If the individual models are too similar or often make the same mistakes, combining the models could not produce a discernible performance boost.
+
+#Conclusion: Given that James' decision tree models are quite similar to one another and don't perform much better than a random model, it seems unlikely that combining them would significantly increase performance. He can experiment with other modeling techniques or look into more traits and data sources to improve the model's performance. Alternatively, he can investigate and address the reasons behind the poor performance of the decision tree models before considering ensemble methods.
+
+```
+Question 4:Consider the following Table that classifies some objects into two classes of edible (+) and non- edible (-), based on some characteristics such as the object color, size and shape. What would be the Information gain for splitting the dataset based on the “Size” attribute?
+```{r}
+#Entropy for our data set: I(all _ data) = -[(9/16)log 2(9/16)+(7/16)log2(7/16)] = 0.98361
+#The entropy of small size = 0.811278 & The entropy of large size = 0.954434.
+
+#Using this formula, we can calculate the Information Gain to be 0.105843.
+
+#Information gain highlights the importance of a certain feature vector attribute. Thus, the information gain of the size characteristic in this case is. It is 0.10578144 essential.
+```
+Question 5: Why is it important that the m parameter (number of attributes available at each split) to be optimally set in random forest models? Discuss the implications of setting this parameter too small or too large.
+
+```{r}
+#If the "m" parameter is set to an exceptionally large value that is near to the entire number of features ("p"), each node will select practically all characteristics, leading to a lack of diversity among various trees. The model will thereafter become too complex, have a large variance, and maybe overfit. Nevertheless, if the "m" value is set too low, the number of qualities that each node may represent will be restricted, which may make it more difficult for the decision tree to detect significant correlations between the features. As a result, the model will be biased and too simplistic, which might lead to underfitting.
+
+#As a result, it's critical to set the "m" parameter in Random Forest models to an appropriate value. The best value for "m" is dependent on the specific problem at hand and is best thought of as a tuning parameter. In general, a good place to start is to set "m" to the square root of the number of features for classification problems and to the logarithm base 2 of the number of features for regression problems. It is necessary to experiment with different values of "m" in order to find the optimum one that strikes a balance between bias and variety. It's important to keep in mind that Random Forest models are designed to utilize the diversity of unique decision trees, and that attaining this goal by setting "m" to an appropriate value can help.
+
+
+```
+```{r}
+#LOADING THE REQUIRED LIBRARIES INTO THE PROJECT. 
+library(ISLR)
+library(dplyr)
+library(glmnet)
+library(caret)
+```
+```{r}
+#Using dplyr to select sales, price, advertising, population, age, income, and education.
+Carseats_Filtered <- Carseats %>% select("Sales", "Price", 
+"Advertising","Population","Age","Income","Education")
+
+```
+QB1. Build a decision tree regression model to predict Sales based on all other attributes 
+("Price", "Advertising", "Population", "Age", "Income" and "Education").  Which attribute is used 
+at the top of the tree (the root node) for splitting? Hint: you can either plot () and text()  
+functions or use the summary() function to see the decision tree rules.  
+```{r}
+#LOADING THE REQUIRED LIBRARIES INTO THE PROJECT. 
+library(rpart)
+library(rpart.plot)
+carsdata <- Carseats_Filtered
+MODEL1 = rpart(Sales~.,data=carsdata, method='anova')
+#SUMMARY OF THE MODEL 1
+summary(MODEL1)
+```
+
+
+```{r}
+#PLOTTING THE MODEL1
+plot(MODEL1)
+text(MODEL1)
+```
+#The attribute that is at the top of the tree is Price.
+
+#Question #2: Consider the following input:Sales=9, Price=6.54, Population=124, Advertising=0, Age=76, Income= 110, Education=10. What will be the estimated Sales for this record using the decision tree model?
+
+```{r}
+MODEL2 = rpart(Sales~.,data=carsdata, method='anova', control = rpart.control(minsplit = 60 ))
+#SUMMARY OF THE MODEL 2
+summary(MODEL2)
+```
+
+```{r}
+#PLOTTING THE MODEL2
+plot(MODEL2)
+text(MODEL2)
+```
+
+```{r}
+N_MODEL <- data.frame(Price=6.54,  Population=124, Advertising=0, Age=76, Income= 110, Education=10)
+predict(MODEL1, newdata=N_MODEL)
+```
+
+#The estimated sales for this record using a decision tree model is 9.5862.
+
+#Question 3:  Use the caret function to train a random forest (method=’rf’) for the same dataset. Use the caret default settings. By default, caret will examine the “mtry” values of 2,4, and 6. Recall that mtry is the number of attributes available for splitting at each splitting node. Which mtry value gives the best performance?
+
+```{r}
+size = floor(0.70*nrow(Carseats_Filtered))
+size
+```
+
+```{r}
+set.seed(123)
+train = sample(seq_len(nrow(Carseats_Filtered)), size = size)
+
+Train_Data = Carseats_Filtered[train,]
+Test_Data = Carseats_Filtered[-train,]
+rf_tree <- train(Sales~., data = Carseats_Filtered, method = "rf")
+print(rf_tree)
+```
+
+#The mtry that gives the best performance is the 2nd mtry. 
+
+
+#Question 4: Customize the search grid by checking the model’s performance for mtry values of 2, 3 and 5 using 3 repeats of 5-fold cross validation
+
+
+```{r}
+#USING THE MTRY VALUE OF 2.
+mtry = 2
+Train_2 <- trainControl(method = "repeatedcv", number = 5, repeats = 3)
+tunegrid1 <- expand.grid(.mtry=mtry)
+TREE2 <- train(Sales~.,
+               method = "rf",
+               data = Train_Data,
+               trControl = Train_2,
+               tuneGrid=tunegrid1
+               )
+print(TREE2)
+```
+
+
+```{r}
+#USING THE MTRY VALUE OF 3.
+mtry = 3
+Train_2 <- trainControl(method = "repeatedcv", number = 5, repeats = 3)
+tunegrid <- expand.grid(.mtry=mtry)
+TREE2 <- train(Sales~.,
+               method = "rf",
+               data = Train_Data,
+               trControl = Train_2,
+               tuneGrid=tunegrid
+               )
+print(TREE2)
+```
+```{r}
+
+#USING THE MTRY VALUE OF 5.
+mtry = 5
+Train_2 <- trainControl(method = "repeatedcv", number = 5, repeats = 3)
+tunegrid <- expand.grid(.mtry=mtry)
+TREE2 <- train(Sales~.,
+               method = "rf",
+               data = Train_Data,
+               trControl = Train_2,
+               tuneGrid=tunegrid
+               )
+print(TREE2)
+
+```
